@@ -44,6 +44,17 @@ pol_safe <- na.omit(pol_safe)
 pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(7, 8, 9), NA))
 pol_safe <- na.omit(pol_safe)
 
+# Changing the numbers in a variable so that the higher the number the bigger feeling of safety ----
+pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(1), 5))
+pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(2), 6))
+pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(3), 7))
+pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(4), 8))
+
+pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(5), 4))
+pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(6), 3))
+pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(7), 2))
+pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(8), 1))
+
 # Creating the CSV file with the new data ----
 rio::export(pol_safe, here::here("Data_preproc", 'pol_safe.csv'))
 ```
@@ -72,10 +83,30 @@ library(knitr)
 mean_sft %>% kable()
 ```
 
-
 ## Data visualization
 
 Finally, we created the visualization of the relationship between the variables:
+
+```{r, message = F, warning = F}
+# Creating the plot ----
+bar_chart = ggplot(mean_sft, aes(x = trstplc, y = safty_mean)) +
+  geom_col(alpha = 0.2, col = "black", fill = "blue") +
+  scale_x_continuous(breaks = unique(mean_sft$trstplc))+
+  ylab("Feeling of safety") +
+  xlab("Trust in police") +
+  ggtitle("Relationship between people's trust in police and their feeling of safety walking alone outside at night")+
+  theme_bw()+ 
+  theme(
+    plot.title.position = 'plot',
+    plot.title = element_text(size=22, face = "bold", hjust = 0.5),
+    axis.title.x = element_text(size=16, face="bold"),
+    axis.title.y = element_text(size=16, face="bold"))
+
+# Exporting the png file ----
+ggsave('bar_chart.png', path = "Figures", width = 1920/120, height = 1080/120, dpi = 300)
+```
+
+![](Figures/bar_chart.png)
 
 ```{r, message = F, warning = F}
 # Importing the file with the data ----
@@ -85,19 +116,22 @@ mean_sft <- rio::import('Data_preproc/mean_sft.csv')
 safety <- ggplot(mean_sft, aes(x = trstplc, y = safty_mean)) + 
   geom_point() +
   geom_smooth(method = "lm", col = "blue") +
+  scale_x_continuous(breaks = unique(mean_sft$trstplc))+
   ylab("Feeling of safety") +
   xlab("Trust in police") +
-  ggtitle("Relationship between people's\ntrust in police and them feeling safe\nalone outside at night") +
-  theme_grey()
+  ggtitle("Linear regression model of the relationship between people's trust in police and \ntheir feeling of safety walking alone outside at night") +
+  theme_grey()+
+  theme(
+    plot.title.position = 'plot',
+    plot.title = element_text(size=14, face = "bold", hjust = 0.5),
+    axis.title.x = element_text(size=12, face="bold"),
+    axis.title.y = element_text(size=12, face="bold"))
 
 # Exporting the png file ----
 ggsave('safety.png', device = 'png', path = "Figures", plot = safety, width = 8, height = 4)
 ```
 
-```{r, echo = F, message = F, warning = F}
-safety
-```
-
+![](Figures/safety.png)
 
 ## Conclusion
 
