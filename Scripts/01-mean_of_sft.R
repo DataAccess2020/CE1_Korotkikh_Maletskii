@@ -1,5 +1,8 @@
+# Loading packages ----
+library(tidyverse)
+
 # Importing the file with the data ----
-rio::import('Data_preproc/pol_safe.csv')
+pol_safe <- rio::import('Data_preproc/pol_safe.csv')
 
 # Counting the means for each value of trstplc ----
 mean_sft = pol_safe %>% 
@@ -10,4 +13,4 @@ mean_sft = pol_safe %>%
 mean_sft
 
 # Creating the CSV file with the means ----
-rio::export(mean_sft, file = 'mean_sft', format = 'csv')
+rio::export(mean_sft, file = 'mean_sft.csv', format = 'csv')
