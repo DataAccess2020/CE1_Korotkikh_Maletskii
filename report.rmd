@@ -15,21 +15,23 @@ knitr::opts_chunk$set(echo = TRUE)
 
 People usually do not feel being alone outside at night. However, if they know that the police can save them from burglars or killers, they are less stressed about it.
 
-## Methods
+## Methods, research question and hypothesis
 
 We have used the ESS10 dataset and took the variables *trstplc* (Trust in the police) and *aesfdrk* (Feeling of safety of walking alone in local area after dark). The first variable ranges from 0 (No trust at all) to 10 (Complete trust), whereas the second variable ranges from 1 (Very unsafe) to 4 (Very safe).
+
+Having chosen these variables, we put the following research question: "Is there any relationship between people's trust in police and their feeling of safety?"
 
 In our opinion, **the more people trust the police, the safer they feel walking alone in local area after dark.**
 
 ## Data preparation
 
-Loading the __tidyverse__ package:
+Loading the **tidyverse** package:
 
 ```{r, results = 'hide', message = F, warning = F}
 library(tidyverse)
 ```
 
-We needed to remove the NAs and extract the two variables necessary for the research:
+We needed to remove the NAs and extract the two variables necessary for the research and to change the numbers in a variable *aesfdrk* so that the higher the number the bigger the feeling of safety:
 
 ```{r, results = 'hide', message = F}
 # Importing the data and removing the NAs ----
@@ -44,7 +46,7 @@ pol_safe <- na.omit(pol_safe)
 pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(7, 8, 9), NA))
 pol_safe <- na.omit(pol_safe)
 
-# Changing the numbers in a variable so that the higher the number the bigger feeling of safety ----
+# Changing the numbers in a variable so that the higher the number the bigger the feeling of safety ----
 pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(1), 5))
 pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(2), 6))
 pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(3), 7))
@@ -135,4 +137,4 @@ ggsave('safety.png', device = 'png', path = "Figures", plot = safety, width = 8,
 
 ## Conclusion
 
-According to the plot, people indeed feel safer out at night when they trust the police more. Our hypothesis proved to be true.
+According to the bar chart and the linear regression model, we can see that people indeed feel safer out at night when they trust the police more. Thus, our hypothesis is proved to be true.
