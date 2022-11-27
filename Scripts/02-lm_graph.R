@@ -14,4 +14,4 @@ safety <- ggplot(mean_sft, aes(x = trstplc, y = safty_mean)) +
   theme_grey()
 
 # Exporting the png file ----
-ggsave('safety.png', device = 'png', plot = safety, width = 8, height = 4)
+ggsave('safety.png', device = 'png', path = "Figures", plot = safety, width = 8, height = 4)

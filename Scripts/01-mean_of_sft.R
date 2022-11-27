@@ -13,4 +13,4 @@ mean_sft = pol_safe %>%
 mean_sft
 
 # Creating the CSV file with the means ----
-rio::export(mean_sft, file = 'mean_sft.csv', format = 'csv')
+rio::export(mean_sft, here::here("Data_preproc", 'mean_sft.csv'))
