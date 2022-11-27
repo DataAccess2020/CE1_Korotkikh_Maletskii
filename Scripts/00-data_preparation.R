@@ -14,4 +14,4 @@ pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(7, 8, 
 pol_safe <- na.omit(pol_safe)
 
 # Creating the CSV file with the new data ----
-rio::export(pol_safe, file = 'pol_safe.csv', format = 'csv')
+rio::export(pol_safe, here::here("Data_preproc", 'pol_safe.csv'))
