@@ -17,7 +17,7 @@ People usually do not feel being alone outside at night. However, if they know t
 
 ## Methods
 
-We have used the ESS10 dataset and took the variables __trstplc__ (Trust in the police) and __aesfdrk__ (Feeling of safety of walking alone in local area after dark). The first variable ranges from 0 (No trust at all) to 10 (Complete trust), whereas the second variable ranges from 1 (Very safe) to 4 (Very unsafe).
+We have used the ESS10 dataset and took the variables *trstplc* (Trust in the police) and *aesfdrk* (Feeling of safety of walking alone in local area after dark). The first variable ranges from 0 (No trust at all) to 10 (Complete trust), whereas the second variable ranges from 1 (Very unsafe) to 4 (Very safe).
 
 In our opinion, **the more people trust the police, the safer they feel walking alone in local area after dark.**
 
@@ -25,13 +25,13 @@ In our opinion, **the more people trust the police, the safer they feel walking 
 
 Loading the __tidyverse__ package:
 
-```{r, eval = F}
+```{r, results = 'hide', message = F, warning = F}
 library(tidyverse)
 ```
 
 We needed to remove the NAs and extract the two variables necessary for the research:
 
-```{r, eval = F}
+```{r, results = 'hide', message = F}
 # Importing the data and removing the NAs ----
 ess <- rio::import('Data_orig/ESS10.dta')
 ess[ess == '77'] <- NA
@@ -50,10 +50,55 @@ rio::export(pol_safe, here::here("Data_preproc", 'pol_safe.csv'))
 
 ## Calculating the means
 
-Next, we needed to see the means of the variable __aesfdrk__ for each value of the __trstplc__ variable:
+Next, we needed to see the means of the variable *aesfdrk* for each value of the *trstplc* variable:
 
-```{r, eval = F}
-plot(pressure)
+```{r, message = F, results = 'hide'}
+# Importing the file with the data ----
+pol_safe <- rio::import('Data_preproc/pol_safe.csv')
+
+# Counting the means for each value of trstplc ----
+mean_sft = pol_safe %>% 
+  group_by(trstplc) %>%
+  summarize(
+    safty_mean = mean(aesfdrk, na.rm=T)
+  )
+
+# Creating the CSV file with the means ----
+rio::export(mean_sft, here::here("Data_preproc", 'mean_sft.csv'))
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r, message = F, echo = F}
+library(knitr)
+mean_sft %>% kable()
+```
+
+
+## Data visualization
+
+Finally, we created the visualization of the relationship between the variables:
+
+```{r, message = F, warning = F}
+# Importing the file with the data ----
+mean_sft <- rio::import('Data_preproc/mean_sft.csv')
+
+# Creating the plot ----
+safety <- ggplot(mean_sft, aes(x = trstplc, y = safty_mean)) + 
+  geom_point() +
+  geom_smooth(method = "lm", col = "blue") +
+  ylab("Feeling of safety") +
+  xlab("Trust in police") +
+  ggtitle("Relationship between people's\ntrust in police and them feeling safe\nalone outside at night") +
+  theme_grey()
+
+# Exporting the png file ----
+ggsave('safety.png', device = 'png', path = "Figures", plot = safety, width = 8, height = 4)
+```
+
+```{r, echo = F, message = F, warning = F}
+safety
+```
+
+
+## Conclusion
+
+According to the plot, people indeed feel safer out at night when they trust the police more. Our hypothesis proved to be true.
