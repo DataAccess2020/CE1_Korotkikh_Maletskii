@@ -15,9 +15,9 @@ safety <- ggplot(mean_sft, aes(x = trstplc, y = safty_mean)) +
   theme_grey()+
   theme(
     plot.title.position = 'plot',
-    plot.title = element_text(size=22, face = "bold", hjust = 0.5),
-    axis.title.x = element_text(size=16, face="bold"),
-    axis.title.y = element_text(size=16, face="bold"))
+    plot.title = element_text(size=14, face = "bold", hjust = 0.5),
+    axis.title.x = element_text(size=12, face="bold"),
+    axis.title.y = element_text(size=12, face="bold"))
 safety
 
 # Exporting the png file ----
