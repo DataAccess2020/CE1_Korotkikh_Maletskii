@@ -1,0 +1,59 @@
+---
+title: "Class Exercise 1"
+author: "Sergei Korotkikh, Vadim Maletskii"
+date: "27/11/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Relationship between people's trust in police and their feeling safe alone outside at night
+
+## Introduction
+
+People usually do not feel being alone outside at night. However, if they know that the police can save them from burglars or killers, they are less stressed about it.
+
+## Methods
+
+We have used the ESS10 dataset and took the variables __trstplc__ (Trust in the police) and __aesfdrk__ (Feeling of safety of walking alone in local area after dark). The first variable ranges from 0 (No trust at all) to 10 (Complete trust), whereas the second variable ranges from 1 (Very safe) to 4 (Very unsafe).
+
+In our opinion, **the more people trust the police, the safer they feel walking alone in local area after dark.**
+
+## Data preparation
+
+Loading the __tidyverse__ package:
+
+```{r, eval = F}
+library(tidyverse)
+```
+
+We needed to remove the NAs and extract the two variables necessary for the research:
+
+```{r, eval = F}
+# Importing the data and removing the NAs ----
+ess <- rio::import('Data_orig/ESS10.dta')
+ess[ess == '77'] <- NA
+ess[ess == '88'] <- NA
+ess[ess == '99'] <- NA
+
+# Selecting the variables needed and removing the NAs ----
+pol_safe <- ess %>% select(trstplc, aesfdrk)
+pol_safe <- na.omit(pol_safe)
+pol_safe <- pol_safe %>% mutate(aesfdrk = replace(aesfdrk, aesfdrk %in% c(7, 8, 9), NA))
+pol_safe <- na.omit(pol_safe)
+
+# Creating the CSV file with the new data ----
+rio::export(pol_safe, here::here("Data_preproc", 'pol_safe.csv'))
+```
+
+## Calculating the means
+
+Next, we needed to see the means of the variable __aesfdrk__ for each value of the __trstplc__ variable:
+
+```{r, eval = F}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
